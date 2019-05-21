@@ -1,0 +1,21 @@
+repos:
+- repo: https://ghe.abchosting.com/CloudOps/pre-commit-terraform
+  rev: v1.0.1
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_docs
+    - id: git_secrets
+      args: ["--scan"]
+
+- repo: https://ghe.abchosting.com/CloudOps/pre-commit-hooks
+  rev: v1.0.1
+  hooks:
+    - id: check-json
+      exclude: ^templates/
+    - id: pretty-format-json
+      args: ["--autofix"]
+      exclude: ^templates/
+    - id: detect-private-key
+    - id: check-case-conflict
+    - id: check-merge-conflict
+    - id: check-executables-have-shebangs
