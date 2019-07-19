@@ -1,5 +1,10 @@
 
 # Change Log
+## [v0.0.2] - 2019-07-19
+
+- Updated the vpc-flowlog role permissions to allow logs:PutSubscriptionFilter
+
+
 ## [v1.1.1] - 2019-04-03
 ### Changed
 - Removed old references to cloudcraft from module source

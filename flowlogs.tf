@@ -22,6 +22,7 @@ data aws_iam_policy_document flowlog {
       "logs:PutLogEvents",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams",
+      "logs:PutSubscriptionFilter"
     ]
 
     resources = ["*"]
