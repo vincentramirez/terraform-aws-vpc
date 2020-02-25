@@ -2,17 +2,17 @@ data "terraform_remote_state" "network" {
   backend = "remote"
 
   config = {
-    organization = "${var.tfe_org_name}"
-    hostname     = "${var.tfe_host_name}"
+    organization = var.tfe_org_name
+    hostname     = var.tfe_host_name
     workspaces = {
-      name = "${var.tfe_core_network_workspace_name}"
+      name = var.tfe_core_network_workspace_name
     }
   }
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachment" {
-  vpc_id             = "${var.vpc_id}"
-  transit_gateway_id = "${data.terraform_remote_state.network.transitgw}"
+  vpc_id             = var.vpc_id
+  transit_gateway_id = data.terraform_remote_state.network.transitgw
   subnet_ids         = ["${var.subnet_ids}"]
   dns_support        = "disable"
 
