@@ -3,6 +3,12 @@ terraform {
 }
 
 locals {
+  common_tags = merge(
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags
+  )
   max_subnet_length = max(
     length(var.private_subnets),
     length(var.elasticache_subnets),
@@ -25,6 +31,22 @@ locals {
 ######
 # VPC
 ######
+module "aws_vpc_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.aws_vpc_tags.rt_vpc
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.vpc_tags,
+  )
+}
+
 resource "aws_vpc" "this" {
   count = var.create_vpc ? 1 : 0
 
@@ -34,42 +56,42 @@ resource "aws_vpc" "this" {
   enable_dns_support               = var.enable_dns_support
   assign_generated_ipv6_cidr_block = var.assign_generated_ipv6_cidr_block
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.vpc_tags,
-  )
+  tags = module.aws_vpc_tags.tags
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
-  count = var.create_vpc && length(var.secondary_cidr_blocks) > 0 ? length(var.secondary_cidr_blocks) : 0
-
-  vpc_id = aws_vpc.this[0].id
-
+  count      = var.create_vpc && length(var.secondary_cidr_blocks) > 0 ? length(var.secondary_cidr_blocks) : 0
+  vpc_id     = aws_vpc.this[0].id
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
 ###################
 # DHCP Options Set
 ###################
-resource "aws_vpc_dhcp_options" "this" {
-  count = var.create_vpc && var.enable_dhcp_options ? 1 : 0
+module "dhcp_options_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.dhcp_options_tags.rt_dhcp_options
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.dhcp_options_tags,
+  )
+}
 
+resource "aws_vpc_dhcp_options" "this" {
+  count                = var.create_vpc && var.enable_dhcp_options ? 1 : 0
   domain_name          = var.dhcp_options_domain_name
   domain_name_servers  = var.dhcp_options_domain_name_servers
   ntp_servers          = var.dhcp_options_ntp_servers
   netbios_name_servers = var.dhcp_options_netbios_name_servers
   netbios_node_type    = var.dhcp_options_netbios_node_type
-
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.dhcp_options_tags,
-  )
+  tags                 = module.dhcp_options_tags.tags
 }
 
 ###############################
@@ -85,28 +107,43 @@ resource "aws_vpc_dhcp_options_association" "this" {
 ###################
 # Internet Gateway
 ###################
+module "internet_gateway_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.internet_gateway_tags.rt_igw
+  function      = var.module_function
+  description   = var.internet_gateway_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.igw_tags,
+  )
+}
+
 resource "aws_internet_gateway" "this" {
   count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.igw_tags,
-  )
+  tags = module.internet_gateway_tags.tags
 }
 
 ################
 # Publiс routes
 ################
-resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
-
-  vpc_id = local.vpc_id
-
+module "public_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.public_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.public_subnet_suffix}", var.name)
@@ -114,6 +151,14 @@ resource "aws_route_table" "public" {
     var.tags,
     var.public_route_table_tags,
   )
+}
+
+resource "aws_route_table" "public" {
+  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = module.public_route_table_tags.tags
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -132,6 +177,22 @@ resource "aws_route" "public_internet_gateway" {
 # Private routes
 # There are so many routing tables as the largest amount of subnets of each type (really?)
 #################
+module "private_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.private_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.private_route_table_tags,
+  )
+}
+
 resource "aws_route_table" "private" {
   count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
@@ -145,8 +206,7 @@ resource "aws_route_table" "private" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.private_route_table_tags,
+    module.private_route_table_tags.tags
   )
 
   lifecycle {
@@ -159,11 +219,16 @@ resource "aws_route_table" "private" {
 #################
 # Database routes
 #################
-resource "aws_route_table" "database" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0
-
-  vpc_id = local.vpc_id
-
+module "database_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.database_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     var.tags,
     var.database_route_table_tags,
@@ -173,14 +238,27 @@ resource "aws_route_table" "database" {
   )
 }
 
-#################
-# Redshift routes
-#################
-resource "aws_route_table" "redshift" {
-  count = var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0
+resource "aws_route_table" "database" {
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
+  tags = module.database_route_table_tags.tags
+}
+
+#################
+# Redshift routes
+#################
+module "redshift_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.redshift_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     var.tags,
     var.redshift_route_table_tags,
@@ -190,14 +268,27 @@ resource "aws_route_table" "redshift" {
   )
 }
 
-#################
-# Elasticache routes
-#################
-resource "aws_route_table" "elasticache" {
-  count = var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
+resource "aws_route_table" "redshift" {
+  count = var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
+  tags = module.redshift_route_table_tags.tags
+}
+
+#################
+# Elasticache routes
+#################
+module "elasticache_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.elasticache_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     var.tags,
     var.elasticache_route_table_tags,
@@ -207,14 +298,27 @@ resource "aws_route_table" "elasticache" {
   )
 }
 
-#################
-# Intra routes
-#################
-resource "aws_route_table" "intra" {
-  count = var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0
+resource "aws_route_table" "elasticache" {
+  count = var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
+  tags = module.elasticache_route_table_tags.tags
+}
+
+#################
+# Intra routes
+#################
+module "intra_route_table_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.intra_route_table_tags.rt_route_table
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = "${var.name}-intra"
@@ -224,9 +328,33 @@ resource "aws_route_table" "intra" {
   )
 }
 
+resource "aws_route_table" "intra" {
+  count = var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = module.intra_route_table_tags.tags
+}
+
 ################
 # Public subnet
 ################
+module "public_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.public_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.public_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 && false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs) ? length(var.public_subnets) : 0
 
@@ -243,14 +371,29 @@ resource "aws_subnet" "public" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.public_subnet_tags,
+    module.public_subnet_tags.tags,
   )
 }
 
 #################
 # Private subnet
 #################
+module "private_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.private_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.private_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "private" {
   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
@@ -266,14 +409,29 @@ resource "aws_subnet" "private" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.private_subnet_tags,
+    module.private_subnet_tags.tags,
   )
 }
 
 ##################
 # Database subnet
 ##################
+module "database_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.database_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.database_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
@@ -289,8 +447,23 @@ resource "aws_subnet" "database" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.database_subnet_tags,
+    module.database_subnet_tags.tags,
+  )
+}
+
+module "db_subnet_group_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.db_subnet_group_tags.rt_subnet_group
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.database_subnet_group_tags,
   )
 }
 
@@ -301,18 +474,28 @@ resource "aws_db_subnet_group" "database" {
   description = "Database subnet group for ${var.name}"
   subnet_ids  = aws_subnet.database.*.id
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.database_subnet_group_tags,
-  )
+  tags = module.db_subnet_group_tags.tags
 }
 
 ##################
 # Redshift subnet
 ##################
+module "redshift_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.redshift_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.redshift_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
@@ -328,8 +511,23 @@ resource "aws_subnet" "redshift" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.redshift_subnet_tags,
+    module.redshift_subnet_tags.tags,
+  )
+}
+
+module "redshift_subnet_group_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.redshift_subnet_group_tags.rt_subnet_group
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.redshift_subnet_group_tags,
   )
 }
 
@@ -340,18 +538,28 @@ resource "aws_redshift_subnet_group" "redshift" {
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = aws_subnet.redshift.*.id
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.redshift_subnet_group_tags,
-  )
+  tags = module.redshift_subnet_group_tags.tags
 }
 
 #####################
 # ElastiCache subnet
 #####################
+module "elasticache_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.elasticache_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.elasticache_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
@@ -367,8 +575,7 @@ resource "aws_subnet" "elasticache" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.elasticache_subnet_tags,
+    module.elasticache_subnet_tags.tags,
   )
 }
 
@@ -383,6 +590,22 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 #####################################################
 # intra subnets - private subnet without NAT gateway
 #####################################################
+module "intra_aws_subnet_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.intra_aws_subnet_tags.rt_subnet
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.intra_subnet_tags,
+  )
+}
+
 resource "aws_subnet" "intra" {
   count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
@@ -394,8 +617,7 @@ resource "aws_subnet" "intra" {
     {
       "Name" = format("%s-intra-%s", var.name, element(var.azs, count.index))
     },
-    var.tags,
-    var.intra_subnet_tags,
+    module.intra_aws_subnet_tags.tags,
   )
 }
 
@@ -417,6 +639,22 @@ locals {
   )
 }
 
+module "eip_nat_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.eip_nat_tags.rt_nat
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    var.tags,
+    var.nat_eip_tags,
+  )
+}
+
 resource "aws_eip" "nat" {
   count = var.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.nat_gateway_count : 0
 
@@ -430,8 +668,23 @@ resource "aws_eip" "nat" {
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
+    module.eip_nat_tags.tags,
+  )
+}
+
+module "eip_nat_gateway_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.eip_nat_gateway_tags.rt_nat_gw
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
     var.tags,
-    var.nat_eip_tags,
+    var.nat_gateway_tags,
   )
 }
 
@@ -455,8 +708,7 @@ resource "aws_nat_gateway" "this" {
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
-    var.tags,
-    var.nat_gateway_tags,
+    module.eip_nat_gateway_tags.tags,
   )
 
   depends_on = [aws_internet_gateway.this]
@@ -483,11 +735,26 @@ data "aws_vpc_endpoint_service" "s3" {
   service = "s3"
 }
 
+module "s3_vpc_endpoint_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.s3_vpc_endpoint_tags.rt_vpc_endpoint
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags          = local.common_tags
+}
+
 resource "aws_vpc_endpoint" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+
+  tags = module.s3_vpc_endpoint_tags.tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -525,6 +792,8 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+
+  tags = module.vpc_endpoint_tags.tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
@@ -611,19 +880,29 @@ resource "aws_route_table_association" "public" {
 ##############
 # VPN Gateway
 ##############
+module "vpc_endpoint_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.vpc_endpoint_tags.rt_vpc_endpoint
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    local.common_tags,
+    var.vpn_gateway_tags,
+  )
+}
+
 resource "aws_vpn_gateway" "this" {
   count = var.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
   vpc_id          = local.vpc_id
   amazon_side_asn = var.amazon_side_asn
 
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.vpn_gateway_tags,
-  )
+  tags = module.vpc_endpoint_tags.tags
 }
 
 resource "aws_vpn_gateway_attachment" "this" {
@@ -661,7 +940,26 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 
 ###########
 # Defaults
-###########
+###########resource_type
+module "default_vpc_endpoint_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.93"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.default_vpc_endpoint_tags.rt_vpc
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
+  tags = merge(
+    {
+      "Name" = format("%s", var.default_vpc_name)
+    },
+    var.tags,
+    var.default_vpc_tags,
+  )
+}
+
 resource "aws_default_vpc" "this" {
   count = var.manage_default_vpc ? 1 : 0
 
@@ -669,5 +967,5 @@ resource "aws_default_vpc" "this" {
   enable_dns_hostnames = var.default_vpc_enable_dns_hostnames
   enable_classiclink   = var.default_vpc_enable_classiclink
 
-  tags = merge({"Name" = format("%s", var.default_vpc_name)}, var.tags, var.default_vpc_tags,)
+  tags = module.default_vpc_endpoint_tags.tags
 }
