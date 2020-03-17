@@ -722,6 +722,7 @@ variable "vpc_flowlogs_cloudwatch_destination_arn" {
 variable "region" {
   type        = string
   description = "AWS Region to deploy to"
+  default     = "eu-west-2"
 }
 
 variable "environment" {
