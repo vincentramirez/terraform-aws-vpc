@@ -135,12 +135,6 @@ variable "create_database_subnet_group" {
   default     = true
 }
 
-variable "enable_public_redshift" {
-  description = "Controls if redshift should have public routing table"
-  type        = bool
-  default     = false
-}
-
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = list(string)
