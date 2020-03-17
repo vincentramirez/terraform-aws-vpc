@@ -135,12 +135,6 @@ variable "create_database_subnet_group" {
   default     = true
 }
 
-variable "enable_public_redshift" {
-  description = "Controls if redshift should have public routing table"
-  type        = bool
-  default     = false
-}
-
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = list(string)
@@ -191,7 +185,7 @@ variable "external_nat_ip_ids" {
 
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
-  type        = list(string)
+  type        = bool
   default     = false
 }
 
