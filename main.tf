@@ -33,7 +33,7 @@ locals {
 ######
 module "aws_vpc_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.aws_vpc_tags.rt_vpc
@@ -70,7 +70,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 ###################
 module "dhcp_options_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.dhcp_options_tags.rt_dhcp_options
@@ -109,12 +109,12 @@ resource "aws_vpc_dhcp_options_association" "this" {
 ###################
 module "internet_gateway_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.internet_gateway_tags.rt_igw
   function      = var.module_function
-  description   = var.internet_gateway_description
+  description   = var.module_description
   tracking_code = var.tracking_code
   channel       = var.channel
   tags = merge(
@@ -136,7 +136,7 @@ resource "aws_internet_gateway" "this" {
 ################
 module "public_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.public_route_table_tags.rt_route_table
@@ -179,7 +179,7 @@ resource "aws_route" "public_internet_gateway" {
 #################
 module "private_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.private_route_table_tags.rt_route_table
@@ -221,7 +221,7 @@ resource "aws_route_table" "private" {
 #################
 module "database_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.database_route_table_tags.rt_route_table
@@ -251,7 +251,7 @@ resource "aws_route_table" "database" {
 #################
 module "redshift_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.redshift_route_table_tags.rt_route_table
@@ -281,7 +281,7 @@ resource "aws_route_table" "redshift" {
 #################
 module "elasticache_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.elasticache_route_table_tags.rt_route_table
@@ -311,7 +311,7 @@ resource "aws_route_table" "elasticache" {
 #################
 module "intra_route_table_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.intra_route_table_tags.rt_route_table
@@ -341,7 +341,7 @@ resource "aws_route_table" "intra" {
 ################
 module "public_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.public_subnet_tags.rt_subnet
@@ -380,7 +380,7 @@ resource "aws_subnet" "public" {
 #################
 module "private_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.private_subnet_tags.rt_subnet
@@ -418,7 +418,7 @@ resource "aws_subnet" "private" {
 ##################
 module "database_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.database_subnet_tags.rt_subnet
@@ -453,7 +453,7 @@ resource "aws_subnet" "database" {
 
 module "db_subnet_group_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.db_subnet_group_tags.rt_subnet_group
@@ -482,7 +482,7 @@ resource "aws_db_subnet_group" "database" {
 ##################
 module "redshift_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.redshift_subnet_tags.rt_subnet
@@ -517,7 +517,7 @@ resource "aws_subnet" "redshift" {
 
 module "redshift_subnet_group_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.redshift_subnet_group_tags.rt_subnet_group
@@ -546,7 +546,7 @@ resource "aws_redshift_subnet_group" "redshift" {
 #####################
 module "elasticache_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.elasticache_subnet_tags.rt_subnet
@@ -592,7 +592,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 #####################################################
 module "intra_aws_subnet_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.intra_aws_subnet_tags.rt_subnet
@@ -674,12 +674,16 @@ resource "aws_default_network_acl" "this" {
 ########################
 # Public Network ACLs
 ########################
-resource "aws_network_acl" "public" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.public.*.id
-
+module "public_nacl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.public_nacl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.public_subnet_suffix}", var.name)
@@ -687,6 +691,15 @@ resource "aws_network_acl" "public" {
     var.tags,
     var.public_acl_tags,
   )
+}
+
+resource "aws_network_acl" "public" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.public.*.id
+
+  tags = module.public_nacl_tags.tags
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
@@ -726,12 +739,16 @@ resource "aws_network_acl_rule" "public_outbound" {
 #######################
 # Private Network ACLs
 #######################
-resource "aws_network_acl" "private" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.private.*.id
-
+module "private_nacl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.private_nacl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.private_subnet_suffix}", var.name)
@@ -739,6 +756,15 @@ resource "aws_network_acl" "private" {
     var.tags,
     var.private_acl_tags,
   )
+}
+
+resource "aws_network_acl" "private" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.private.*.id
+
+  tags = module.private_nacl_tags.tags
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
@@ -778,12 +804,16 @@ resource "aws_network_acl_rule" "private_outbound" {
 ########################
 # Intra Network ACLs
 ########################
-resource "aws_network_acl" "intra" {
-  count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.intra.*.id
-
+module "intra_nacl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.intra_nacl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.intra_subnet_suffix}", var.name)
@@ -791,6 +821,15 @@ resource "aws_network_acl" "intra" {
     var.tags,
     var.intra_acl_tags,
   )
+}
+
+resource "aws_network_acl" "intra" {
+  count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.intra.*.id
+
+  tags = module.intra_nacl_tags.tags
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
@@ -830,12 +869,16 @@ resource "aws_network_acl_rule" "intra_outbound" {
 ########################
 # Database Network ACLs
 ########################
-resource "aws_network_acl" "database" {
-  count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.database.*.id
-
+module "database_acl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.database_acl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.database_subnet_suffix}", var.name)
@@ -843,6 +886,15 @@ resource "aws_network_acl" "database" {
     var.tags,
     var.database_acl_tags,
   )
+}
+
+resource "aws_network_acl" "database" {
+  count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.database.*.id
+
+  tags = module.database_acl_tags.tags
 }
 
 resource "aws_network_acl_rule" "database_inbound" {
@@ -882,12 +934,16 @@ resource "aws_network_acl_rule" "database_outbound" {
 ########################
 # Redshift Network ACLs
 ########################
-resource "aws_network_acl" "redshift" {
-  count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.redshift.*.id
-
+module "redshift_acl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.redshift_acl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.redshift_subnet_suffix}", var.name)
@@ -895,6 +951,15 @@ resource "aws_network_acl" "redshift" {
     var.tags,
     var.redshift_acl_tags,
   )
+}
+
+resource "aws_network_acl" "redshift" {
+  count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.redshift.*.id
+
+  tags = module.redshift_acl_tags.tags
 }
 
 resource "aws_network_acl_rule" "redshift_inbound" {
@@ -934,12 +999,16 @@ resource "aws_network_acl_rule" "redshift_outbound" {
 ###########################
 # Elasticache Network ACLs
 ###########################
-resource "aws_network_acl" "elasticache" {
-  count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
-
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.elasticache.*.id
-
+module "network_acl_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.104"
+  environment   = var.environment
+  region        = var.region
+  resource_type = module.network_acl_tags.rt_nacl
+  function      = var.module_function
+  description   = var.module_description
+  tracking_code = var.tracking_code
+  channel       = var.channel
   tags = merge(
     {
       "Name" = format("%s-${var.elasticache_subnet_suffix}", var.name)
@@ -947,6 +1016,15 @@ resource "aws_network_acl" "elasticache" {
     var.tags,
     var.elasticache_acl_tags,
   )
+}
+
+resource "aws_network_acl" "elasticache" {
+  count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.elasticache.*.id
+
+  tags = module.network_acl_tags.tags
 }
 
 resource "aws_network_acl_rule" "elasticache_inbound" {
@@ -1003,7 +1081,7 @@ locals {
 
 module "eip_nat_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.eip_nat_tags.rt_nat
@@ -1036,7 +1114,7 @@ resource "aws_eip" "nat" {
 
 module "eip_nat_gateway_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.eip_nat_gateway_tags.rt_nat_gw
@@ -1099,7 +1177,7 @@ data "aws_vpc_endpoint_service" "s3" {
 
 module "s3_vpc_endpoint_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.s3_vpc_endpoint_tags.rt_vpc_endpoint
@@ -1244,7 +1322,7 @@ resource "aws_route_table_association" "public" {
 ##############
 module "vpc_endpoint_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.vpc_endpoint_tags.rt_vpc_endpoint
@@ -1305,7 +1383,7 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 ###########resource_type
 module "default_vpc_endpoint_tags" {
   source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
-  version       = "~> 0.1.93"
+  version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
   resource_type = module.default_vpc_endpoint_tags.rt_vpc
