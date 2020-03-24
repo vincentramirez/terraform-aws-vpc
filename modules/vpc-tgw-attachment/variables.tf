@@ -30,3 +30,44 @@ variable "tfe_org_name" {
   default     = "example"
 }
 
+variable "region" {
+  type        = string
+  description = "AWS Region to deploy to"
+}
+
+variable "environment" {
+  description = "The environment for the account"
+  type        = string
+  default     = "dev"
+}
+
+variable "channel" {
+  description = "Indicates the distribution channel to which the resource of this module belongs to"
+  type        = string
+  default     = "vpc-channel"
+}
+
+variable "tracking_code" {
+  description = "Code for the resources of this module to be matched against internal inventory systems such as Atlas"
+  type        = string
+  default     = ""
+}
+
+variable "module_function" {
+  description = "4 character description of the function of the vpc to deploy"
+  type        = string
+  default     = ""
+}
+
+variable "module_description" {
+  description = "Description of what this module will be used for"
+  type        = string
+}
+
+variable "tags" {
+  type        = map(string)
+  description = ""
+  default = {
+    Name = "tlz-tgw-attachment"
+  }
+}

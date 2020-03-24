@@ -16,15 +16,18 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachment" {
   subnet_ids         = var.subnet_ids
   dns_support        = "disable"
 
-  tags = {
-    Name = "tlz-tgw-attachment"
-  }
+  tags = module.tgw_tags.tags
 }
 
-# resource "aws_route" "route" {
-#   count = length(var.route_tables)
-#   route_table_id = data.aws_route_table.rt.*.id[count.index]
-#   destination_cidr_block = "0.0.0.0/0"
-#   transit_gateway_id = data.aws_ec2_transit_gateway.tgw.id
-#   depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw_attachment]
-# }
+module "tgw_tags" {
+  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  version       = "~> 0.1.105"
+  description   = var.module_description
+  function      = var.module_function
+  region        = var.region
+  resource_type = module.tgw_tags.rt_transit_gateway
+  tags          = var.tags
+  environment   = var.environment
+  tracking_code = var.tracking_code
+  channel       = var.channel
+}

@@ -755,42 +755,42 @@ variable "module_description" {
 
 variable "redshift_acl_tags" {
   description = "Redshift ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "intra_acl_tags" {
   description = "Infra ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "public_acl_tags" {
   description = "Public ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "private_acl_tags" {
   description = "Private ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "database_acl_tags" {
   description = "Database ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "elasticache_acl_tags" {
   description = "Elasticache ACL tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "default_network_acl_name" {
   description = "Defailt network ACT name"
-  type = string
-  default = "default_network_acl_name"
+  type        = string
+  default     = "default_network_acl_name"
 }

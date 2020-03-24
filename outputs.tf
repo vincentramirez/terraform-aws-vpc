@@ -297,7 +297,7 @@ output "default_vpc_default_network_acl_id" {
 
 output "default_vpc_default_route_table_id" {
   description = "The ID of the default route table"
-  value       = element(
+  value = element(
     concat(aws_default_vpc.this.*.default_route_table_id, [""]),
     0,
   )
