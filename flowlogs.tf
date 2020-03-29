@@ -55,6 +55,7 @@ resource "aws_cloudwatch_log_group" "flowlog_log_group" {
 }
 
 resource "aws_flow_log" "default_vpc_flow_logs" {
+  count           = var.create_vpc ? 1 : 0
   log_destination = aws_cloudwatch_log_group.flowlog_log_group.arn
   iam_role_arn    = aws_iam_role.flowlog.arn
   vpc_id          = local.vpc_id
@@ -62,6 +63,7 @@ resource "aws_flow_log" "default_vpc_flow_logs" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "flowlog_subscription_filter" {
+  count           = var.create_vpc ? 1 : 0
   name            = "flowlog-subscription-filter-${local.vpc_id}"
   log_group_name  = aws_cloudwatch_log_group.flowlog_log_group.name
   filter_pattern  = ""

@@ -196,20 +196,17 @@ output "private_route_table_ids" {
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
-  value       = [coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id)]
+  value       = [aws_route_table.database.*.id]
 }
 
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
-  value       = [coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id)]
+  value       = [aws_route_table.redshift.*.id]
 }
 
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
-  value = [coalescelist(
-    aws_route_table.elasticache.*.id,
-    aws_route_table.private.*.id,
-  )]
+  value       = [aws_route_table.elasticache.*.id]
 }
 
 output "intra_route_table_ids" {
@@ -330,7 +327,7 @@ output "default_vpc_main_route_table_id" {
 
 output "vpc_flowlog_id" {
   description = "id of vpc flowlog"
-  value       = aws_flow_log.default_vpc_flow_logs.id
+  value       = [aws_flow_log.default_vpc_flow_logs.*.id]
 }
 
 output "vpc_flowlog_role_arn" {
