@@ -332,7 +332,7 @@ output "vpc_flowlog_id" {
 
 output "vpc_flowlog_role_arn" {
   description = "vpc flow log arn"
-  value       = aws_iam_role.flowlog.arn
+  value       = element(concat(aws_iam_role.flowlog.*.arn, [""]), 0)
 }
 
 //output "default_vpc_ipv6_association_id" {
