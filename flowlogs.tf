@@ -30,14 +30,11 @@ data "aws_iam_policy_document" "flowlog" {
 }
 
 resource "aws_iam_policy" "flowlog" {
+  count       = var.create_vpc ? 1 : 0
   name        = "vpc-flowlog-policy-${local.vpc_id}"
   path        = "/"
   description = "VPC Flow Logs Policy"
   policy      = data.aws_iam_policy_document.flowlog.json
-
-  depends_on = [
-    aws_cloudwatch_log_group.flowlog_log_group
-  ]
 }
 
 resource "aws_iam_role" "flowlog" {
@@ -48,7 +45,7 @@ resource "aws_iam_role" "flowlog" {
 
 resource "aws_iam_role_policy_attachment" "flowlog" {
   count      = var.create_vpc ? 1 : 0
-  role       = aws_iam_role.flowlog.name
+  role       = aws_iam_role.flowlog.*.name[count.index]
   policy_arn = aws_iam_policy.flowlog.*.arn[count.index]
 }
 
@@ -64,7 +61,7 @@ resource "aws_cloudwatch_log_group" "flowlog_log_group" {
 resource "aws_flow_log" "default_vpc_flow_logs" {
   count           = var.create_vpc ? 1 : 0
   log_destination = aws_cloudwatch_log_group.flowlog_log_group.*.arn[count.index]
-  iam_role_arn    = aws_iam_role.flowlog.arn
+  iam_role_arn    = aws_iam_role.flowlog.*.arn[count.index]
   vpc_id          = local.vpc_id
   traffic_type    = "ALL"
 }
