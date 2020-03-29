@@ -30,6 +30,7 @@ data "aws_iam_policy_document" "flowlog" {
 }
 
 resource "aws_iam_policy" "flowlog" {
+  count       = var.create_vpc ? 1 : 0
   name        = "vpc-flowlog-policy-${local.vpc_id}"
   path        = "/"
   description = "VPC Flow Logs Policy"
@@ -37,11 +38,13 @@ resource "aws_iam_policy" "flowlog" {
 }
 
 resource "aws_iam_role" "flowlog" {
+  count              = var.create_vpc ? 1 : 0
   name               = "vpc-flowlogs-role-${local.vpc_id}"
   assume_role_policy = data.aws_iam_policy_document.trust.json
 }
 
 resource "aws_iam_role_policy_attachment" "flowlog" {
+  count      = var.create_vpc ? 1 : 0
   role       = aws_iam_role.flowlog.name
   policy_arn = aws_iam_policy.flowlog.arn
 }
@@ -51,7 +54,8 @@ resource "aws_iam_role_policy_attachment" "flowlog" {
 ###########
 
 resource "aws_cloudwatch_log_group" "flowlog_log_group" {
-  name = "vpc-flowlog-loggroup-${local.vpc_id}"
+  count = var.create_vpc ? 1 : 0
+  name  = "vpc-flowlog-loggroup-${local.vpc_id}"
 }
 
 resource "aws_flow_log" "default_vpc_flow_logs" {
