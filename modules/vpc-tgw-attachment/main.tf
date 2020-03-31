@@ -20,7 +20,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachment" {
 }
 
 module "tgw_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.105"
   description   = var.module_description
   function      = var.module_function

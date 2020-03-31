@@ -32,7 +32,7 @@ locals {
 # VPC
 ######
 module "aws_vpc_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -69,7 +69,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 # DHCP Options Set
 ###################
 module "dhcp_options_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -108,7 +108,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 # Internet Gateway
 ###################
 module "internet_gateway_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -135,7 +135,7 @@ resource "aws_internet_gateway" "this" {
 # Publiс routes
 ################
 module "public_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -178,7 +178,7 @@ resource "aws_route" "public_internet_gateway" {
 # There are so many routing tables as the largest amount of subnets of each type (really?)
 #################
 module "private_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -220,7 +220,7 @@ resource "aws_route_table" "private" {
 # Database routes
 #################
 module "database_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -250,7 +250,7 @@ resource "aws_route_table" "database" {
 # Redshift routes
 #################
 module "redshift_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -280,7 +280,7 @@ resource "aws_route_table" "redshift" {
 # Elasticache routes
 #################
 module "elasticache_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -310,7 +310,7 @@ resource "aws_route_table" "elasticache" {
 # Intra routes
 #################
 module "intra_route_table_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -340,7 +340,7 @@ resource "aws_route_table" "intra" {
 # Public subnet
 ################
 module "public_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -379,7 +379,7 @@ resource "aws_subnet" "public" {
 # Private subnet
 #################
 module "private_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -417,7 +417,7 @@ resource "aws_subnet" "private" {
 # Database subnet
 ##################
 module "database_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -452,7 +452,7 @@ resource "aws_subnet" "database" {
 }
 
 module "db_subnet_group_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -481,7 +481,7 @@ resource "aws_db_subnet_group" "database" {
 # Redshift subnet
 ##################
 module "redshift_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -516,7 +516,7 @@ resource "aws_subnet" "redshift" {
 }
 
 module "redshift_subnet_group_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -545,7 +545,7 @@ resource "aws_redshift_subnet_group" "redshift" {
 # ElastiCache subnet
 #####################
 module "elasticache_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -591,7 +591,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 # intra subnets - private subnet without NAT gateway
 #####################################################
 module "intra_aws_subnet_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -675,7 +675,7 @@ resource "aws_default_network_acl" "this" {
 # Public Network ACLs
 ########################
 module "public_nacl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -740,7 +740,7 @@ resource "aws_network_acl_rule" "public_outbound" {
 # Private Network ACLs
 #######################
 module "private_nacl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -805,7 +805,7 @@ resource "aws_network_acl_rule" "private_outbound" {
 # Intra Network ACLs
 ########################
 module "intra_nacl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -870,7 +870,7 @@ resource "aws_network_acl_rule" "intra_outbound" {
 # Database Network ACLs
 ########################
 module "database_acl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -935,7 +935,7 @@ resource "aws_network_acl_rule" "database_outbound" {
 # Redshift Network ACLs
 ########################
 module "redshift_acl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1000,7 +1000,7 @@ resource "aws_network_acl_rule" "redshift_outbound" {
 # Elasticache Network ACLs
 ###########################
 module "network_acl_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1080,7 +1080,7 @@ locals {
 }
 
 module "eip_nat_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1113,7 +1113,7 @@ resource "aws_eip" "nat" {
 }
 
 module "eip_nat_gateway_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1176,7 +1176,7 @@ data "aws_vpc_endpoint_service" "s3" {
 }
 
 module "s3_vpc_endpoint_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1321,7 +1321,7 @@ resource "aws_route_table_association" "public" {
 # VPN Gateway
 ##############
 module "vpc_endpoint_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
@@ -1382,7 +1382,7 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 # Defaults
 ###########resource_type
 module "default_vpc_endpoint_tags" {
-  source        = "tfe.tlzproject.com/san-uk-poc/tagging/aws"
+  source        = "sdi-tfe.tlzproject.com/sdi/tagging/aws"
   version       = "~> 0.1.104"
   environment   = var.environment
   region        = var.region
