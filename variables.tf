@@ -358,19 +358,19 @@ variable "vpn_gateway_tags" {
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "dhcp_options_domain_name" {
   description = "Specifies DNS name for DHCP options set"
   type        = string
-  default     = "aws.xyz.abc.com"
+  default     = ""
 }
 
 variable "dhcp_options_domain_name_servers" {
   description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
   type        = list(string)
-  default     = ["10.64.48.7", "10.64.50.7"]
+  default     = []
 }
 
 variable "dhcp_options_ntp_servers" {
