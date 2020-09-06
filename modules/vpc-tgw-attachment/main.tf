@@ -20,8 +20,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachment" {
 }
 
 module "tgw_tags" {
-   source  = "git@github.com:tlzproject/terraform-aws-tagging.git?ref=workshop"
- 
+  source = "git@github.com:tlzproject/terraform-aws-tagging.git?ref=workshop"
+
   description   = var.module_description
   function      = var.module_function
   region        = var.region
